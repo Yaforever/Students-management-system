@@ -1,0 +1,68 @@
+{% load staticfiles %}
+
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="{% static 'stud/style.css' %}" />
+	
+</head>
+
+<body vlink="#0000FF">
+{% load my_tags %} 
+<div class="header">
+<a href='/' style="color: black">STUDENTS MANAGEMENT</a>
+</div>
+
+<div class="main">
+	<div class="auth">
+	{% if not user.username %}
+		<form action='/auth/login/' method='post'>
+			{% csrf_token %}
+			<label for='username'>Name or e-mail</label>
+			<input type="text" name='username' id='username'></input>
+			<label for='password'>Password</label>
+			<input type="password" name='password' id='password'></input><br>
+			<input type='submit' class="enter1" value='Вход'></input>
+		</form>
+	{% endif %}
+	
+		{% if user.username %}
+			<li class="out"><a href='/auth/logout/'>Выйти ({{ user }})</a></li>
+			<li class="out"><a class="out1" href='/edit/'>Редактировать </a></li>
+	
+		{% endif %}
+	</div>
+
+
+	<div class="groupss">
+	<div class="grouptable"><div class="groupname">Группа</div><div class="mainstud">Староста</div>Студентов</div>
+	<div class="groupp">
+	{% for group in groups %}
+		<li class="g"><a class="groupnames" href='/stud/{{ group.id }}/'>{{ group.groupname }} </a>{{group.mainstudent}} </li>
+	{% endfor %}
+	</div>
+	<div class="list">
+	{% for i in listgroups %}
+		<li style="margin-bottom: 10px;">{{ i }}</li>
+	{% endfor %}
+	</div>
+	</div>
+
+	<span>Тег в действии ==></span>
+	{% if user.username %}
+		<a href='{% intoadmin user %}'>редактировать {{user.username}} </a>
+	{% endif %}
+	</br>
+	<span>Сontext-processor в действии ==> </span>
+	{{djangosettings.TIME_ZONE}}</br>
+	<div class="last">
+		<span class="l">Последние обновления(signals):</span>
+		{% for i in info %}
+			<li>{{i.model_editing}}</li>
+		{% endfor %}
+	</div>
+</div>
+</body>
+</html>

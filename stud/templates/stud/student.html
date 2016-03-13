@@ -1,0 +1,50 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="{% static 'stud/style.css' %}" />
+	
+</head>
+<body vlink="#0000FF">
+<div class="header">
+<a href='/' style="color: black">STUDENTS MANAGEMENT</a>
+</div>
+
+<div class="main">
+	<div class="auth">
+	{% if not user.username %}
+		<form action='/auth/login/' method='post'>
+			{% csrf_token %}
+			<label for='username'>Name or e-mail</label>
+			<input type="text" name='username' id='username'></input>
+			<label for='password'>Password</label>
+			<input type="password" name='password' id='password'></input><br>
+			<input type='submit' class="enter1" value='Вход'></input>
+		</form>
+	{% endif %}
+	
+		{% if user.username %}
+			<li class="out"><a href='/auth/logout/'>Выйти ({{ user }})</a></li>
+			<li class="out"><a class="out1" href='/edit/'>Редактировать </a></li>
+	
+		{% endif %}
+	</div>
+	<div class="groupss">
+	<div class="studtable"><div class="studname">Полное имя</div><div class="birst">Родился</div>
+	<div class="number">№ студ.</div><div class="namegroup">Группа</div></div>
+	
+	<div class="listofstud">
+		
+		{% for s in student.student_set.all %}
+		    <li><div class="studname">{{ s.name }}</div><div class="birst">{{ s.date }}</div><div class="number">{{ s.num }}</div><div class="namegroup">{{ s.group.groupname }}</div></li>
+		{% endfor %}
+	</div>
+		
+	</div>
+<a href='/'>назад к группам</a>
+
+</div>
+</body>
+</html>

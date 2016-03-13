@@ -1,0 +1,72 @@
+[
+	{
+		"model": "stud.Group",
+		"pk": 1,
+		"fields": {
+			"groupname": "IT-47",
+			"mainstudent": "Кириленко Кирилл Кириллович"
+		}
+	},
+	{
+		"model": "stud.Group",
+		"pk": 2,
+		"fields": {
+			"groupname": "IT-38",
+			"mainstudent": "Олегов Олег Олегович"
+		}
+	},
+	{
+		"model": "stud.Group",
+		"pk": 3,
+		"fields": {
+			"groupname": "DD-25",
+			"mainstudent": "Олегов Олег Олегович"
+		}
+	},
+	{
+		"model": "stud.Student",
+		"fields": {
+			"group": "1",
+			"name": "Кириленко Кирилл Кириллович",
+			"date": "2016-02-01",
+			"num": "505"
+		}
+	},
+	{
+		"model": "stud.Student",
+		"fields": {
+			"group": "1",
+			"name": "Олегов Олег Олегович",
+			"date": "2016-02-01",
+			"num": "505"
+		}
+	},
+	{
+		"model": "stud.Student",
+		"fields": {
+			"group": "2",
+			"name": "Олегов Олег Олегович",
+			"date": "2016-02-01",
+			"num": "505"
+		}
+	},
+	{
+		"model": "stud.Student",
+		"fields": {
+			"group": "2",
+			"name": "Олегов Олег Олегович",
+			"date": "2016-02-01",
+			"num": "505"
+		}
+	},
+	{
+		"model": "stud.Student",
+		"fields": {
+			"group": "3",
+			"name": "Олегов Олег Олегович",
+			"date": "2016-02-01",
+			"num": "505"
+		}
+	}
+
+]

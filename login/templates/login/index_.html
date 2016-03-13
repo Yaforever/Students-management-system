@@ -1,0 +1,34 @@
+{% if not username %}
+	<form action='/auth/login/' method='post'>
+		{% csrf_token %}
+		<label for='username'>Name or e-mail</label>
+		<input type="text" name='username' id='username'></input>
+		<label for='password'>Password</label>
+		<input type="password" name='password' id='password'></input>
+		{% if login_error %}
+			<label>{{ login_error }}</label>
+		{% endif %}
+		<input type='submit' value='Enter'></input>
+	</form>
+{% endif %}
+
+{% if login_error %}
+	<label>{{ login_error }}</label>
+{% endif %}
+
+
+<div>
+	<ul>
+		{% if username %}
+			<li><a href='/auth/logout/'>logout ({{ username }})</a></li>
+		{% endif %}
+	</ul>
+</div>
+
+<ul>
+{% for group in groups %}
+	<li><a href='/stud/{{ group.id }}/'>{{ group.name }} </a></li>
+{% endfor %}
+<ul>
+
+{{ email }}

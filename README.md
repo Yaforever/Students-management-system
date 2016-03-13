@@ -1,7 +1,8 @@
-# Students-management-systemm
+# Students-management-system
 Adding deleting and editing groups and students
 
 Python 2.7, Django 1.9
+
 
 Info for authentication:
 
