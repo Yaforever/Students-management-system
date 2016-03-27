@@ -1,0 +1,9 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'stud/style.css' %}" />
+	<form class="firstform" action='/addgroup/' method='post'>
+		{% csrf_token %}
+		<h3 class="s">Add group</h3>
+		{{ gform }}
+		<input type='submit' value='+'></input><br>
+		<span class="error">{{ errorsgr }}</span><br>
+	</form><br>

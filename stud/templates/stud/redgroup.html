@@ -1,0 +1,18 @@
+{% load staticfiles %}
+<button class="redgroup" name="redgroup" id='{{group.id}}' alt="Redact"></button>
+<form class="redgroups" action='/redactgroup/{{group.id}}/' method='post' id='{{group.id}}'>
+	{% csrf_token %}
+	{{ redgform }}
+	Captain
+	<select name="mainstudent">
+		{% for i in group.student_set.all %}
+			{% if i.name == group.mainstudent %}
+				<option selected="{{i.name}}">{{i.name}}</option>
+			{% else %}
+				<option>{{i.name}}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<input class="rgr" type='submit' value='Edit' style="border-bottom-right-radius: 10px"></input>
+
+</form>
