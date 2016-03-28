@@ -14,26 +14,26 @@
 
 <div class="main">
 	<div class="auth">
+
 	{% if not user.username %}
 		<form action='/auth/login/' method='post'>
+			<span class="err">{{ err }}</span><br>
 			{% csrf_token %}
-			<label for='username'>Name or e-mail</label>
-			<input type="text" name='username' id='username'></input>
-			<label for='password'>Password</label>
-			<input type="password" name='password' id='password'></input><br>
-			<input type='submit' class="enter1" value='Вход'></input>
+			{{form}}
+			<input type='submit' class="enter1" value='login'></input>
 		</form>
+
 	{% endif %}
 	
 		{% if user.username %}
-			<li class="out"><a href='/auth/logout/'>Выйти ({{ user }})</a></li>
-			<li class="out"><a class="out1" href='/edit/'>Редактировать </a></li>
+			<li class="out"><a href='/auth/logout/'>logout ({{ user }})</a></li>
+			<li class="out"><a class="out1" href='/edit/'>Edit all </a></li>
 	
 		{% endif %}
 	</div>
 	<div class="groupss">
-	<div class="studtable"><div class="studname">Полное имя</div><div class="birst">Родился</div>
-	<div class="number">№ студ.</div><div class="namegroup">Группа</div></div>
+	<div class="studtable"><div class="studname">Full name</div><div class="birst">Birstday</div>
+	<div class="number">Num</div><div class="namegroup">Group</div></div>
 	
 	<div class="listofstud">
 		
@@ -43,7 +43,7 @@
 	</div>
 		
 	</div>
-<a href='/'>назад к группам</a>
+<a href='/'>back to groups</a>
 
 </div>
 </body>

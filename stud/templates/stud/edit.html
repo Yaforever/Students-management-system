@@ -12,283 +12,129 @@
 <body vlink="#0000FF">
 <div class="header">
 <a href='/' style="color: black">STUDENTS MANAGEMENT</a>
+
 </div>
 
 <div class="main">
 	<div class="auth">
-		<li class="out"><a href='/auth/logout/'>Выйти ({{ user }})</a></li>
+		<li class="out"><a href='/auth/logout/'>logout ({{ user }})</a></li>
 	</div>
 	<div class="addd">
-	<form class="firstform" action='/edit/' method='post'>
-		{% csrf_token %}
-		<h3 class="s">Добавить группу</h3>
-		<label for='name'>Название группы</label>
-		<input class="else" type="text" size="15" maxlength="10" name='name' id='name'></input>
-		<input type='submit' value='+'></input>
-		</br>
-	</form> 
-	<h3>Добавить студента</h3>
-	<form action='/edit/' method='post'>
-		{% csrf_token %}
-		<label for='surname'>ФИО</label>
-		<input type="text" maxlength="30" size="30" name='surname' id='surname'></input>
-
-		<label for='num'>№ студенческого</label>
-		<input type="text" maxlength="10" size="10" name='num' id='num'></input><br>
-
-		<label for='year'>Год рождения</label>
-		<select name='year' class="year">
-			{% for i in y %}
-		  		<option>{{i}}</option>
-		  	{% endfor %}
-		</select>
-
-		<label for='month'>месяц</label>
-		<select name='month' class="month">
-			{% for i in m %}
-		  		<option>{{i}}</option>
-		  	{% endfor %}
-		</select>
-
-		<label for='day'>день</label>
-		<select name='day' class="day">
-		  	{% for i in d %}
-		  		<option class="{{i}}">{{ i }}</option>
-		  	{% endfor %}
-		</select>
-
-
-		<label for='group'>Группа</label>
-		<select name='group'>
-			{% for g in groups %}
-				{% if g.groupname == laststud.group %}
-		  			<option selected="g.groupname">{{g.groupname}}</option>
-		  		{% else %}
-		  			<option>{{g.groupname}}</option>
-				{% endif %}
-		  	{% endfor %}
-		</select>
-		<input type='submit' value='+'></input>
-	</form>
+	{% include 'stud/addgroup.html' %}
+	{% include 'stud/addstudent.html' %}
 	</div>
-	<ul>
+
+
 	<div class="all_gr">
-		{% for group in groups %}
-			<li class="line"><b>{{ group.groupname }}</b></li>
-			<form class="lin" action='/edit/' method='post'>
-				{% csrf_token %}
-				<button class="delgroup" name="delgroup" value='{{group.id}}' alt="Удалить"></button>
-			</form>
-			
-			<button class="redgroup" name="redgroup" id='{{group.id}}' alt="Редактировать"></button>
-			<form class="redgroups" action='/edit/' method='post' id='{{group.id}}'>
-				{% csrf_token %}
-				
-				<input type="hidden" name='rgroupid' class="rgroupid" value="{{group.id}}"></input>
-				<input class="redgroups" type="text" maxlength="10" name='rname' value="{{group.groupname}}"></input>
-				<input class="redgroups" type='submit' value='Edit'></input>
-				Староста
-				<select name="rmainstudent">
-					{% for i in group.student_set.all %}
-						{% if i.name == group.mainstudent %}
-							<option selected="{{i.name}}">{{i.name}}</option>
-						{% else %}
-							<option>{{i.name}}</option>
-						{% endif %}
-					{% endfor %}
-				</select>
-
-			</form>
-			
-			<div class="space"></div>
-
-			{% for s in group.student_set.all %}
-				<li class="sline">{{ s.name }}; {{ s.date }}; {{ s.num }}</li>
-				<form class="lin" action='/edit/' method='post'>
-					{% csrf_token %}
-					<button class="delstud" name="delstud" value="{{s.id}}" alt="Удалить"></button>
-					<button type="button" class="redstud" name="redstud" value="{{s.id}}" alt="Редактировать"></button>
-
-					<div class="editstud">
-							<input type="hidden" name='rstudid' class="rstudid" value="{{s.id}}"></input>
-							<label for='rsurname'>ФИО</label>
-							<input type="text" maxlength="30" name='rsurname' size="30" id='rsurname' value="{{s.name}}"></input>
-
-							<label for='rnum'>№ студенческого</label>
-							<input type="text" maxlength="10" name='rnum' size="10" id='rnum' value="{{s.num}}"></input><br>
-
-							<label for='ryear'>Год рождения</label>
-							<select name='ryear' class="ryear">
-								{% for i in y %}
-									{% if i == s.date.year %}
-										<option selected="i">{{i}}</option>
-									{% else %}}
-										<option>{{i}}</option>
-									{% endif %}
-							 	{% endfor %}
-							</select>
-
-							<label for='rmonth'>месяц</label>
-							<select name='rmonth' class="rmonth">
-								{% for i in m %}
-									{% if i == s.date.month %}
-										<option selected="i">{{i}}</option>
-									{% else %}}
-										<option>{{i}}</option>
-									{% endif %}
-							 	{% endfor %}
-							</select>
-
-							<label for='rday'>день</label>
-							<select name='rday' class="rday" >
-								{% for i in d %}
-									{% if i == s.date.day %}
-										<option selected="i">{{i}}</option>
-									{% else %}}
-										<option class="r{{i}}">{{i}}</option>
-									{% endif %}
-							 	{% endfor %}
-							</select>
-
-							<label for='rgroup'>Группа</label>
-							<select name='rgroup'>
-								{% for group in groups %}
-									{% if group.groupname == s.group.groupname %}
-							  			<option selected="group.groupname">{{group.groupname}}</option>
-									{% else %}
-										<option>{{group.groupname}}</option>
-									{% endif %}
-							  	{% endfor %}
-							</select>
-							<input type='submit' value='Edit' style="border-bottom-right-radius: 10px"></input>
-							
-					</div>
-
-					
-				</form>
-				<div class="space"></div>
-			{% endfor %}
-
-		{% endfor %}
-
+		{% include 'stud/delgroup.html' %}
+		<div class="space"></div>
 	</div>
-	</ul>
-	</div>
-	</div>
+	
 </div>
 	<script type="text/javascript">
 		$(document).ready(function(){
-
 			$(".editstud, .redgroups").hide();
 			$(".redgroup").click(function(){
-				$(".redgroups").hide();
-				var redgroup = $(this).siblings("#" + this.id).show()
-				redgroup.children().show()
-
+				$(".redgroups, .editstud").hide();
+				//show group edit form
+				var redgroup = $(this).siblings("#" + this.id).show();
+				redgroup.children().show();
+				//set initial values to current values
+				var gr = $(this).siblings("#" + 'r' + this.id).children().text();
+				redgroup.children('#id_groupname').val(gr);
 			});
+
+			function date(y, m, d, dval){
+				//if month is February and year is leap, then hide day 30, day 31,  and show 29
+					if(m == 2 & y == 2016 | m == 2 & y == 2012 | m == 2 & y == 2008 | 
+						m == 2 & y == 2004 | m == 2 & y == 2000 | m == 2 & y == 1996 | 
+						m == 2 & y == 1992 | m == 2 & y == 1988 | m == 2 & y == 1984 | 
+						m == 2 & y == 1980 | m == 2 & y == 1976 | m == 2 & y == 1972){
+							
+						$(d[28]).show();
+						$(d[29]).hide();
+						$(d[30]).hide();
+						//if day > 29, then set day to 29
+						if($(dval).val() > 29){
+							$(dval).val('29')
+						}
+					}
+				//if month is February, then hide day 31, day 30, day 29
+					else if(m == 2){
+						$(d[28]).hide();
+						$(d[29]).hide();
+						$(d[30]).hide();
+						//if day > 28, then set day to 28
+						if($(dval).val() > 28){
+							$(dval).val('28')
+						}
+					}
+				// if month is April, June, September, or November, then hide day 31
+					else if(m == 4 | m == 6 | m == 9 | m == 11){
+						$(d[28]).show();
+						$(d[29]).show();
+						$(d[30]).hide();
+						//if day > 30, then set day to 30
+						if($(dval).val() > 30){
+							$(dval).val('30')
+						}
+					}
+					else {
+						$(d[28]).show();
+						$(d[29]).show();
+						$(d[30]).show();
+					}
+			};
+
 			$(".redstud").click(function(){
-				$('.editstud').hide();
+				$(".redgroups, .editstud").hide();
+				//show student edit form
 				var redstud = $(this).siblings(".editstud").show();
-				var ry = $(redstud).children(".ryear").val();	
-				var rm = $(redstud).children(".rmonth").val();
-				var rd = $(redstud).children(".rday").val();
+				var year = $(this).siblings(".editstud").children('#id_date_year');
+				var month = $(this).siblings(".editstud").children('#id_date_month');
+				var day = $(this).siblings(".editstud").children('#id_date_day');
 
-				//если год високосный и месяц = февраль, то показать 29-е февраля
-				if(rm == 2 & ry == 2016 | rm == 2 & ry == 2012 | rm == 2 & ry == 2008 | 
-					rm == 2 & ry == 2004 | rm == 2 & ry == 2000 | rm == 2 & ry == 1996 | 
-					rm == 2 & ry == 1992 | rm == 2 & ry == 1988 | rm == 2 & ry == 1984 | 
-					rm == 2 & ry == 1980 | rm == 2 & ry == 1976 | rm == 2 & ry == 1972){
-					$('.r30, .r31').hide();
-					$('.r29').show();
-					if(rd > 29){
-						$('.rday').val(29);
-					}
-				}
-				//если месяц = февраль, то скрыть 29, 30, 31 числа
-				else if(rm == 2){
-					$('.r31, .r30, .r29').hide()
-					if(rd > 28){
-						$('.rday').val(28);
-					}
-				}
-				else if(rm == 4 | rm == 6 | rm == 9 | rm == 11){
-					$('.r31').hide();
-					$('.r30, .r29').show()
-					if(rd > 30){
-						$('.rday').val(30);
-					}
-				}
-				else{
-						$('.r31, .r30, .r29').show()
-				}
+				var sn = $(this).parent().siblings('#' + this.id).children('.sn').text();
+				var su = $(this).parent().siblings('#' + this.id).children('.su').text();
+				var sg = $(this).parent().siblings('#' + this.id).children('.sg').text();
+				var sy = $(this).parent().siblings('#' + this.id).children('.sy').text();
+				var sm = $(this).parent().siblings('#' + this.id).children('.sm').text();
+				var sd = $(this).parent().siblings('#' + this.id).children('.sd').text();
+				//set initial values to current values
+				$(this).siblings(".editstud").children('#id_name').val(sn);
+				$(this).siblings(".editstud").children('#id_num').val(su);
+				$(this).siblings(".editstud").children('#id_group').val(sg);
+				$(this).siblings(".editstud").children('#id_date_year').val(sy);
+				$(this).siblings(".editstud").children('#id_date_month').val(sm);
+				$(this).siblings(".editstud").children('#id_date_day').val(sd);
+
+				var y = $(year).val();
+				var m = $(month).val();
+				var d = $(day).children();
+				var dval = $(day);
+				
+				date(y, m, d, dval);
+
+				$('#id_date_year, #id_date_month').change(function(){
+					var y = $(year).val();
+					var m = $(month).val();
+					var d = $(day).children();
+					var dval = $(day);
+
+					date(y, m, d, dval);
+
+				});
 			});
 
-			$(".year, .month").change(function(){
-				var y = $('.year').val();
-				var m = $('.month').val();
-				var d = $('.day').val();
-				if(m == 2 & y == 2016 | m == 2 & y == 2012 | m == 2 & y == 2008 | 
-					m == 2 & y == 2004 | m == 2 & y == 2000 | m == 2 & y == 1996 | 
-					m == 2 & y == 1992 | m == 2 & y == 1988 | m == 2 & y == 1984 | 
-					m == 2 & y == 1980 | m == 2 & y == 1976 | m == 2 & y == 1972){
-					$('.30, .31').hide();
-					$('.29').show();
-					if(d > 29){
-						$('.day').val(29);
-					}
-				}
-				else if(m == 2){
-					$('.31, .30, .29').hide()
-					if(d > 28){
-						$('.day').val(28);
-					}
-				}
-				else if(m == 4 | m == 6 | m == 9 | m == 11){
-					$('.31').hide();
-					$('.30, .29').show()
-					if(d > 30){
-						$('.day').val(30);
-					}
-				}
-				else{
-					$('.31, .30, .29').show()
-				}
-			});
-			$(".ryear, .rmonth").change(function(){
-					var editstud = $(this).parent()
-					var ry = $(editstud).children(".ryear").val();
-					var rm = $(editstud).children(".rmonth").val();
-					var rd = $(editstud).children(".rday").val();
-					
-					if(rm == 2 & ry == 2016 | rm == 2 & ry == 2012 | rm == 2 & ry == 2008 
-						| rm == 2 & ry == 2004 | rm == 2 & ry == 2000 | rm == 2 & ry == 1996 
-						| rm == 2 & ry == 1992 | rm == 2 & ry == 1988 | rm == 2 & ry == 1984 
-						| rm == 2 & ry == 1980 | rm == 2 & ry == 1976 | rm == 2 & ry == 1972){
-						$('.r30, .r31').hide();
-						$('.r29').show();
-						if(rd > 29){
-							$('.rday').val(29);
-						}
-					}
-					else if(rm == 2){
-						$('.r31, .r30, .r29').hide()
-						if(rd > 28){
-							$('.rday').val(28);
-						}
-					}
-					else if(rm == 4 | rm == 6 | rm == 9 | rm == 11){
-						$('.r31').hide();
-						$('.r30, .r29').show()
-						if(rd > 30){
-							$('.rday').val(30);
-						}
-					}
-					else{
-						$('.r31, .r30, .r29').show()
-					}
-			});
+			$('#id_date_year, #id_date_month').change(function(){
+				var y = $('#id_date_year').val();
+				var m = $('#id_date_month').val();
+				var d = $('#id_date_day').children();
+				var dval = $('#id_date_day');
 
-			
+				date(y, m, d, dval);
+
+			});
 		});
 	</script>
 
