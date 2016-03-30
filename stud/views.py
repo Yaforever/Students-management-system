@@ -35,7 +35,7 @@ def students(request, group_id):
 	err = request.session.get('err')
 	request.session['stud'] = '/stud/{0}/'.format(group_id)
 	username = auth.get_user(request).username
-	#if the page with student had refreshed, then delete all errors
+	#if the page with students had refreshed, then delete all errors
 	if request.session.get("ses") == True:
 		request.session['err'] = ''
 
