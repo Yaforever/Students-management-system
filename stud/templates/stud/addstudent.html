@@ -1,9 +1,0 @@
-{% load staticfiles %}
-<link rel="stylesheet" type="text/css" href="{% static 'stud/style.css' %}" />
-	<form class="firstform" action='/addstudent/' method='post'>
-		{% csrf_token %}
-		<h3 class="s">Add student</h3>
-		{{ sform }}
-		<input type='submit' value='+'></input>
-		<span class="error">{{ errorsst }}</span><br>
-	</form> 

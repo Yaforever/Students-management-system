@@ -30,15 +30,11 @@ class GroupForm(ModelForm):
 		
 
 class StudentForm(ModelForm):
-	
+	years = range(1970, 2030)
 	name = forms.CharField(label='Full name', max_length=30, validators=[validate_name])
 	num = forms.IntegerField(min_value=1, max_value=99999)
 	group = forms.ModelChoiceField(queryset=Group.objects.all())
-	date = forms.DateField(widget=SelectDateWidget(years=(1970, 1971, 1972, 1973,
-	 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986,
-	  1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-	   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011,
-	    2012, 2013, 2014, 2015, 2016)))
+	date = forms.DateField(widget=SelectDateWidget(years=years))
 
 	class Meta:
 		model = Student

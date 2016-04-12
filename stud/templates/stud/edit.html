@@ -19,16 +19,39 @@
 	<div class="auth">
 		<li class="out"><a href='/auth/logout/'>logout ({{ user }})</a></li>
 	</div>
-	<div class="addd">
-	{% include 'stud/addgroup.html' %}
-	{% include 'stud/addstudent.html' %}
+	<div class="addd">		
+		<h3 class="s">Add group</h3>
+		{{ gform }}
+		<input type='button' class="addinggroup" value='+'></input><br>
+		<div class="erroraddgr"></div><br>
+	<br>
+
+		<h3 class="st">Add student</h3>
+		<div class="add_st">{{ sform }}
+		<input type='button' class="addingstudent" value='+'></input></div>
+		<div class="erroraddst"></div><br>
 	</div>
 
+	<div class="editgr">
+		<input type='text' style="width: 100px"></input>
+		<select class="mainstudent"></select>
+		<input type='button' class="redactgroup" style="border-radius: 7px" value='Edit'></input><br>
+
+		<div class="erroreditgr"></div><br>
+	</div>
+
+	<div class="editst">
+		{{ sform }}
+		<input type='button' class="redactstudent" style="border-radius: 7px" value='Edit'></input><br>
+		<div class="err_edit_st"></div><br>
+	</div>
 
 	<div class="all_gr">
-		{% include 'stud/delgroup.html' %}
+		<ul class="ul_gr"></ul>
 		<div class="space"></div>
 	</div>
+
+	
 	
 </div>
 	<script type="text/javascript" src="{% static "stud/script.js" %}"></script>

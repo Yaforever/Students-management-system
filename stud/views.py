@@ -4,8 +4,16 @@ from .models import Group, Student, InfoModels
 from django.contrib import auth
 from forms import GroupForm, StudentForm, DelGroup, DelStudent
 from login.forms import LoginForm
-from .serializers import GroupSerializer
+from .serializers import GroupSerializer, StudentSerializer
 from rest_framework import generics
+from django.http import HttpResponse
+
+
+def ajx(request):
+	count = int(request.GET['count'])
+	if request.method == 'GET':
+		count += 1
+	return HttpResponse(count)
 
 
 class GroupList(generics.ListCreateAPIView):
@@ -16,6 +24,16 @@ class GroupList(generics.ListCreateAPIView):
 class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+
+class StudentList(generics.ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
 
 
 def index(request):
@@ -55,110 +73,7 @@ def students(request, group_id):
 		'username': username, 'form': form, 'err': err})
 
 
-errorsgr = ''
-errorsst = ''
-errorsrgr = ''
-errorsrst = ''
-
-# adding groups
-def addgroup(request):
-	global errorsgr, errorsst, errorsrgr, errorsrst
-
-	if request.POST:
-		request.session["ses"] = False
-		#delete old errors
-		errorsst = ''
-		errorsrgr = ''
-		errorsrst = ''
-		gform = GroupForm(request.POST)
-		
-		if gform.is_valid():
-			Group.objects.create(groupname=gform.cleaned_data['groupname'])
-			errorsgr = ''
-		else: 
-			errorsgr = gform.errors
-
-	return redirect('/edit/')
-
-#adding students
-def addstudent(request):
-	global errorsgr, errorsst, errorsrgr, errorsrst
-
-	if request.POST:
-		request.session["ses"] = False
-		#delete old errors
-		errorsgr = ''
-		errorsrgr = ''
-		errorsrst = ''
-		sform = StudentForm(request.POST)
-		
-		if sform.is_valid():
-			Student.objects.create(name=sform.cleaned_data['name'], num=sform.cleaned_data['num'],
-					date=sform.cleaned_data['date'], group=sform.cleaned_data['group'])
-			errorsst = ''
-		else: 
-			errorsst = sform.errors
-
-	return redirect('/edit/')
-
-#deleting groups
-def deletegroup(request, group_id):
-	delgform = DelGroup()	
-	Group.objects.filter(id=group_id).delete()
-	return redirect('/edit/')
-
-#deleting students
-def deletestudent(request, student_id):
-	delsform = DelStudent()	
-	Student.objects.filter(id=student_id).delete()
-	return redirect('/edit/')
-
-#editing groups
-def redactgroup(request, group_id):
-	global errorsrgr, errorsgr, errorsst, errorsrst
-
-	if request.POST:
-		request.session["ses"] = False
-		#delete old errors
-		errorsgr = ''
-		errorsst = ''
-		errorsrst = ''
-		redgform = GroupForm(request.POST)
-
-		if redgform.is_valid():
-			Group.objects.filter(id=group_id).update(groupname=redgform.cleaned_data['groupname'], 
-				mainstudent=request.POST.get('mainstudent', 'Unknown'))
-			errorsrgr = ''
-		else:
-			errorsrgr = redgform.errors
-
-	return redirect('/edit/')
-
-#editing students
-def redactstudent(request, student_id):
-	global errorsrgr, errorsrst, errorsgr, errorsst
-
-	if request.POST:
-		request.session["ses"] = False
-		#delete old errors
-		errorsgr = ''
-		errorsst = ''
-		errorsrgr = ''
-		redsform = StudentForm(request.POST)
-
-		if redsform.is_valid():
-			Student.objects.filter(id=student_id).update(name=redsform.cleaned_data['name'], 
-				num=redsform.cleaned_data['num'], date=redsform.cleaned_data['date'], 
-				group=redsform.cleaned_data['group'])
-			errorsrgr = ''
-		else:
-			errorsrgr = redsform.errors
-
-	return redirect('/edit/')
-
-
 def edit(request):
-	global errorsgr, errorsst, errorsrgr, errorsrst
 
 	groups = Group.objects.all()
 	student = Student.objects.all()
@@ -168,16 +83,10 @@ def edit(request):
 	redgform = GroupForm()
 	redsform = StudentForm()
 	#if the edit page had refreshed, then delete all errors
-	if request.session.get('ses') == True:
-		errorsgr = ''
-		errorsst = ''
-		errorsrgr = ''
-	request.session["ses"] = True
 
 	return render(request, 'stud/edit.html', {'groups': groups, 'student': student, 
 		'username': username, 'gform': gform, 'sform': sform, 'redgform': redgform, 
-		'redsform': redsform, 'errorsgr': errorsgr, 'errorsst': errorsst, 
-		'errorsrgr': errorsrgr, 'errorsrst': errorsrst})
+		'redsform': redsform})
 
 
 
