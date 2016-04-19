@@ -46,13 +46,14 @@ $(document).ready(function(){
 		var m = $('#id_date_month').val()
 		var d = $('#id_date_day').children()
 		var dval = $('#id_date_day')
-		console.log(y, m, d, dval)
 		date(y, m, d, dval)		
 	})
 
 	// group editing
-	function editgr(curr_id, json){
+	function editgr(curr_id){
 
+		$('.delstud').show()
+		$('.redstud').show()	
 		$(".editst").hide();// hide student editting form
 		var redgroup
 		for (i = 0; i < $('.redgroup').length; i++){
@@ -60,12 +61,12 @@ $(document).ready(function(){
 				redgroup = $('.redgroup:eq(' + i + ')')
 			}
 		}
-
 		redgroup.next().after($('.editgr'));// insert group editing form
 		redgroup.siblings('.editgr').children('.mainstudent').html('');
-		for (x in json){
-			if (json[x].group == redgroup.val()){
-				redgroup.siblings('.editgr').children('.mainstudent').append('<option>' + json[x].name + '</option>');
+	
+		for (x = 0; x < $('.inp').length; x++){
+			if ($('.inp:eq(' + x + ')').html() == redgroup.val()){
+				redgroup.next().next().children('.mainstudent').append('<option>' + $('.inp:eq(' + x + ')').siblings('.sline').html().split('; ')[0] + '</option>');
 			}	
 		}
 		// set the initial values to the current values
@@ -75,18 +76,19 @@ $(document).ready(function(){
 		$('.erroreditgr').html('')
 
 		$('.redactgroup').click(function(){
-			console.log($(this).siblings('input').val())
+			var its = $(this).parent()
 			var check = $(this).siblings('input').val()
 			// validation
 			if (check.match(/^([a-zA-Zа-яА-Я0-9]+)([ ]*|[-]?)([a-zA-Zа-яА-Я0-9]+)$/i) == null){
 				$('.erroreditgr').html('Please, write only letters and digits, \
 				only one hyphenation. Something like "Group-32", "33 MM", "92f5gf9d4f" etc')
 			}
-			else{	
+			else{
+				its.hide()	
 				$('.erroreditgr').html('')
-				var its = $(this).parent()
+				
 				$.ajax({
-					url: 'http://127.0.0.1:8000/groupsAPI/' + its.prev().prev().val(),
+					url: '//127.0.0.1:8000/groupsAPI/' + its.prev().prev().val() + '/',
 					type: 'PUT',
 					dataType: 'json',
 					data: {
@@ -94,72 +96,81 @@ $(document).ready(function(){
 						'mainstudent': $(this).siblings('select').val(),
 					},
 					success: function(json){
-						its.prev().prev().prev().prev().prev().html(json.groupname)
-						its.hide()
+						for (i = 0; i < $('.line').length; i++){
+							if (its.prev().prev().val() == json.id){
+								its.prev().prev().prev().prev().prev().html(json.groupname)
+							}
+						}
+						
+						for (i = 0; i < $('.editst select:eq(0) option').length; i++){
+							if ($('.editst select:eq(0) option:eq(' + i + ')').val() == redgroup.val()){
+								$('.editst select:eq(0) option:eq(' + i + ')').html(json.groupname)
+								$('.add_st select:eq(0) option:eq(' + i + ')').html(json.groupname)
+							}
+						}
 					},
 				})
 			}
 		})
 	}
 	// group deleting
-	function delgr(curr_id, current){
-
+	function delgr(curr_id){
+		
 		$.ajax({
-			url: 'http://127.0.0.1:8000/groupsAPI/' + curr_id,
+			url: '//127.0.0.1:8000/groupsAPI/' + curr_id + '/',
 			type: 'DELETE',
-			success: function(){
-				var it = $('.delgroup:eq(' + current + ')')
-				it.siblings('.editgr').remove()
-				it.prev().remove()
-				it.prev().remove()
-				it.next().remove()
-				it.next().remove()
-				it.next().remove()
-				it.siblings('.editst').remove()
-				it.remove()
+			success: function(data){
 				
-				for (i in $('.inp')){
-
-					if ($('.inp:eq(' + i + ')').html() == it.val()){
-						$('.inp:eq(' + i + ')').prev().prev().remove()
-						$('.inp:eq(' + i + ')').prev().prev().remove()
-						$('.inp:eq(' + i + ')').prev().prev().remove()
-						$('.inp:eq(' + i + ')').prev().remove()
-
+				$('.editst').hide()
+				
+				var it;
+				for (i = 0; i < $('.delgroup').length; i++){
+					if($('.delgroup:eq(' + i + ')').val() == curr_id){
+						it = $('.delgroup:eq(' + i + ')')
 					}
-				}
-				
-				function rem(it){
-					for (i in $('.inp')){
+				};
+				function ds(){
+					for (i = 0; i < $('.inp').length; i++){
 						if ($('.inp:eq(' + i + ')').html() == it.val()){
-							$('.inp:eq(' + i + ')').remove()
+							$('.inp:eq(' + i + ')').siblings('.editst').appendTo($('.main'))
+							$('.inp:eq(' + i + ')').parent().remove();
+							return ds()
 						}
-					}
-				}
-				rem(it)
-				rem(it)
-				rem(it)
-				rem(it)
+					};
+				};
+				ds()
+
+				it.siblings('.editgr').hide();
+				it.prev().remove();
+				it.prev().remove();
+				it.next().remove();
+				it.next().remove();
+				it.next().remove();
+				it.remove();
+				
+				$('.add_st select:eq(0) option:last-child').remove();
+				$('.editst select:eq(0) option:last-child').remove();
 			}
-		})
-	}
+		});
+	};
 	// student editing
 	function redst(value){
 		$('.err_edit_st').html('')
 		var it 
 		for (i = 0; i < $('.redstud').length; i++){
 			if($('.redstud:eq(' + i + ')').next().next().next().html() == value){
-
 				it = $('.redstud:eq(' + i + ')')
 			}
 		}
+		$('.editst').hide()
 		$(".editgr").hide()// hide group editing form
 		$('.delstud').show()
 		$('.redstud').show()
+
 		it.prev().hide()
 		it.hide()
-		it.next().after($('.editst'));// insert student edtiting form
-		it.siblings(".editst").show();
+		it.next().after($('.editst')[0]);// insert student edtiting form
+		it.siblings(".editst:eq(0)").show();
 		var currgroup = it.next().next().next().html()
 		var thisinf = it.prev().prev().html().split('; ')
 		var day = thisinf[2].split('-')[2]
@@ -211,7 +222,7 @@ $(document).ready(function(){
 			else{
 				$('.err_edit_st').html('')
 				$.ajax({
-					url: 'http://127.0.0.1:8000/studentsAPI/' + it.next().next().html(),
+					url: '//127.0.0.1:8000/studentsAPI/' + it.next().next().html() + '/',
 					type: 'PUT',
 					dataType: 'json',
 					data:{
@@ -229,7 +240,7 @@ $(document).ready(function(){
 									$('.redgroup:eq(' + i + ')').next().after(it.parent())
 								}
 							}
-							}
+						}
 						
 						it.prev().prev().prev().prev().html(json.name + '; ' + json.num + '; ' + json.date)
 						it.next().html(json.group)
@@ -279,7 +290,7 @@ $(document).ready(function(){
 		else {	
 			$('.erroraddgr').html('')
 			$.ajax({
-				url: 'http://127.0.0.1:8000/groupsAPI/',
+				url: '//127.0.0.1:8000/groupsAPI/',
 				type: 'POST',
 				dataType: 'json',
 				data: {
@@ -300,46 +311,43 @@ $(document).ready(function(){
 					$('.delgroup:eq(' + eq + ')').val(data.id)
 					$('.redgroup:eq(' + eq + ')').val(data.id)
 					$('.main:eq(' + eq + ')').val(data.mainstudent)
-					$('.added:eq(' + eq + ')').val(data.id)
-					var listgroups = ''
-					listgroups += data.id  + ','
-					var array = listgroups.split(',')
-					delete array[5]	
 					// group deleting
-					$('.delgroup').click(function(){
-						var current
-						for (i = 0; i < $('.delgroup').length; i++){
-							if($('.delgroup:eq(' + i + ')').val() == $(this).val()){
-								current = i
-							}
-						}
-						var curr_id = $(this).val()
-						delgr(curr_id, current)
-					})
-					$.ajax({
-						url: 'http://127.0.0.1:8000/studentsAPI/',
-						type: 'GET',
-						dataType: 'json',
-						success: function(json){
-							$(".redgroup").click(function(){
-								var curr_id = $(this).val()
-								editgr(curr_id, json)
-							})
-						}
-					});
-						
+
 				}
 			})
 		}
 	})
-	
+
+	$( ".delgroup" ).live( "click", function() {
+		delgr($(this).val())
+	});	
+
+	$( ".redgroup" ).live( "click", function() {
+		editgr($(this).val())
+	});	
+
+	$('.delstud').live("click", function(){
+		var it = $(this)
+		$.ajax({
+			url: '//127.0.0.1:8000/studentsAPI/' + $(this).siblings('.idstud').html()  + '/',
+			type: 'DELETE',
+			success: function(){
+				it.parent().remove()
+			}
+		})
+	})	
+
+	$(".redstud").live('click', function(){
+		$(".editgr").hide()
+		$(this).prev().hide()
+		redst($(this).next().next().next().html())
+	})
 	$.ajax({
-		url: 'http://127.0.0.1:8000/groupsAPI/',
+		url: '//127.0.0.1:8000/groupsAPI/',
 		type: 'GET',
 		dataType: 'json',
 		success: function (data){
-			var listgroups = '';
-			
+
 			for (i = 0; i < data.length; i++){
 				var eq = i + 1
 				$('.ul_gr').append('<br><li class="line"></li>')// loading list of groups
@@ -351,88 +359,21 @@ $(document).ready(function(){
 				$('.delgroup:eq(' + i + ')').val(data[i].id)
 				$('.redgroup:eq(' + i + ')').val(data[i].id)
 				$('.main:eq(' + eq + ')').val(data[i].mainstudent)
-				
-				listgroups += data[i].id  + ','
-				array = listgroups.split(',')
-				delete array[array.length - 1]	
 			};
-	// student adding
-	$('.addingstudent').click(function (){
-		var month = $(this).siblings('#id_date_month').val()
-		var day = $(this).siblings('#id_date_day').val()
-		var year = $(this).siblings('#id_date_year').val()
-		var checkname = $(this).siblings('#id_name').val()
-		var gr = $(this).siblings('#id_group').val()
-		console.log(gr)
-		// validation
-		if (checkname.match(/^(([a-zA-Zа-яА-Я]+)([ ]*|[-]?)([a-zA-Zа-яА-Я]+))*$/i) == null){
-			$('.erroraddst').html('Please, write only letters and single hyphenations. Something like \
-		"Name Surname", "Name Surname-Surname", "Name MiddleName Surname" etc')
 		}
-		else{
-			$('.erroraddst').html('')
-			$.ajax({
-				url: 'http://127.0.0.1:8000/studentsAPI/',
-				type: 'POST',
-				dataType: 'json',
-				data: {
-					'name': $(this).siblings('#id_name').val(),
-					'num': $(this).siblings('#id_num').val(),
-					'group': $(this).siblings('#id_group').val(),
-					'date': year + '-' + month + '-' + day,
-				},
-				success: function(data){
-					listgroups = ''
-					for (i = 0; i < $('.delgroup').length; i++){
-						 listgroups += $('.delgroup:eq(' + i + ')').val() + ','
-					}
-					array = listgroups.split(',')
-					delete array[array.length - 1]
-					
-					var g = '' + gr
-					$('.br:eq(' + array.indexOf(g) + ')').after('<div class=".divstud"><li \
-						class="sline">' + data.name + '; ' + data.num + '; ' + data.date + '</li> \
-						<button class="delstud" alt="Delete"></button><button \
-					class="redstud" alt="Redact"></button><br class="brr"><button class="inp" style="display: none">' + gr + '</button> \
-						<button class="idstud" style="display: none">' + data.id + '</button></div>')
-					$('.delstud').click(function(){
-						var it = $(this)
-						$.ajax({
-							url: 'http://127.0.0.1:8000/studentsAPI/' + $(this).next().next().next().next().html(),
-							type: 'DELETE',
-							success: function(){
-								it.parent().remove()
-							}
-						})
-					})	
-					$(".redstud").click(function(){
-						$(".editgr").hide()
-						$(this).prev().hide()
-						var value = $(this).next().next().next().html()
-						redst(value)
-					})
-				},			
-			})
-		}	
 	})
 
 	$.ajax({
-		url: 'http://127.0.0.1:8000/studentsAPI/',
-		type: 'GET',
-		dataType: 'json',
-		success: function(json){
-			$(".redgroup").click(function(){
-				var curr_id = $(this).val()
-				editgr(curr_id, json)
-			})
-		}
-	});
-			
-	$.ajax({
-		url: 'http://127.0.0.1:8000/studentsAPI/',
+		url: '//127.0.0.1:8000/studentsAPI/',
 		type: 'GET',
 		dataType: 'json',
 		success: function(data){
+			listgroups = ''
+			for (i = 0; i < $('.delgroup').length; i++){
+				 listgroups += $('.delgroup:eq(' + i + ')').val() + ','
+			}
+			var array = listgroups.split(',')
+			delete array[array.length - 1]
 			// loading list of the students
 			for (x in data){
 				var g = '' + data[x].group
@@ -444,45 +385,51 @@ $(document).ready(function(){
 			$('.sline').after('<button class="delstud" \
 			 alt="Delete"></button><button \
 			class="redstud" alt="Redact"></button><br class="brr"></div>')
+
 		},			
 	})
+	// student adding
+	$('.addingstudent').click(function (){
+		var month = $(this).siblings('#id_date_month').val()
+		var day = $(this).siblings('#id_date_day').val()
+		var year = $(this).siblings('#id_date_year').val()
+		var checkname = $(this).siblings('#id_name').val()
+		var gr = $(this).siblings('#id_group').val()
+		// validation
+		if (checkname.match(/^(([a-zA-Zа-яА-Я]+)([ ]*|[-]?)([a-zA-Zа-яА-Я]+))*$/i) == null){
+			$('.erroraddst').html('Please, write only letters and single hyphenations. Something like \
+		"Name Surname", "Name Surname-Surname", "Name MiddleName Surname" etc')
+		}
+		else{
+			$('.erroraddst').html('');
+			$.ajax({
+				url: '//127.0.0.1:8000/studentsAPI/',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					'name': $(this).siblings('#id_name').val(),
+					'num': $(this).siblings('#id_num').val(),
+					'group': $(this).siblings('#id_group').val(),
+					'date': year + '-' + month + '-' + day,
+				},
+				success: function(data){
+					listgroups = '';
+					for (i = 0; i < $('.delgroup').length; i++){
+						 listgroups += $('.delgroup:eq(' + i + ')').val() + ','
+					};
+					var array = listgroups.split(',');
+					delete array[array.length - 1];
+					
+					var g = '' + gr;
+					$('.br:eq(' + array.indexOf(g) + ')').after('<div class=".divstud"><li \
+						class="sline">' + data.name + '; ' + data.num + '; ' + data.date + '</li> \
+						<button class="delstud" alt="Delete"></button><button \
+					class="redstud" alt="Redact"></button><br class="brr"><button class="inp" style="display: none">' + gr + '</button> \
+						<button class="idstud" style="display: none">' + data.id + '</button></div>');
 
-	$.ajax({
-		url: 'http://127.0.0.1:8000/studentsAPI/',
-		type: 'GET',
-		dataType: 'json',
-		success: function(json){
-			$('.delstud').click(function(){
-				var it = $(this)
-				$.ajax({
-					url: 'http://127.0.0.1:8000/studentsAPI/' + $(this).next().next().next().next().html(),
-					type: 'DELETE',
-					success: function(){
-						it.parent().remove()
-						
-					}
-				
-				})
-			})	
-			$(".redstud").click(function(){
-				var value = $(this).next().next().next().html()
-				redst(value)
+				},			
 			})
-	}	
-	});
+		}	
+	})
+})	
 
-	$('.delgroup').click(function(){
-		var current
-		for (i = 0; i < $('.delgroup').length; i++){
-			if($('.delgroup:eq(' + i + ')').val() == $(this).val()){
-				current = i
-			}
-		}
-		var curr_id = $(this).val()
-		delgr(curr_id, current)
-	})
-	
-		}
-	})
-		
-})

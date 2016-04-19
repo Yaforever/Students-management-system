@@ -7,4 +7,4 @@ class StudConfig(AppConfig):
 	verbose_name = 'Students app'
 
 	def ready(self):
-		import stud.signals.handlers
+		import stud.signals.handlers_student_delete, stud.signals.handlers_group_add, stud.signals.handlers_group_delete, stud.signals.handlers_student_add

@@ -9,13 +9,6 @@ from rest_framework import generics
 from django.http import HttpResponse
 
 
-def ajx(request):
-	count = int(request.GET['count'])
-	if request.method == 'GET':
-		count += 1
-	return HttpResponse(count)
-
-
 class GroupList(generics.ListCreateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
@@ -82,11 +75,18 @@ def edit(request):
 	sform = StudentForm()
 	redgform = GroupForm()
 	redsform = StudentForm()
-	#if the edit page had refreshed, then delete all errors
+	form = LoginForm()
+	err = request.session.get('err')
+	request.session['stud'] = '/edit/'
+	#if the main page had refreshed, then delete all errors
+	if request.session.get("ses") == True:
+		request.session['err'] = ''	
+
+	request.session["ses"] = True
 
 	return render(request, 'stud/edit.html', {'groups': groups, 'student': student, 
 		'username': username, 'gform': gform, 'sform': sform, 'redgform': redgform, 
-		'redsform': redsform})
+		'redsform': redsform, 'form': form, 'err': err})
 
 
 
