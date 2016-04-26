@@ -88,7 +88,7 @@ $(document).ready(function(){
 				$('.erroreditgr').html('')
 				
 				$.ajax({
-					url: '//127.0.0.1:8000/groupsAPI/' + its.prev().prev().val() + '/',
+					url: '/groupsAPI/' + its.prev().prev().val() + '/',
 					type: 'PUT',
 					dataType: 'json',
 					data: {
@@ -117,7 +117,7 @@ $(document).ready(function(){
 	function delgr(curr_id){
 		
 		$.ajax({
-			url: '//127.0.0.1:8000/groupsAPI/' + curr_id + '/',
+			url: '/groupsAPI/' + curr_id + '/',
 			type: 'DELETE',
 			success: function(data){
 				
@@ -222,7 +222,7 @@ $(document).ready(function(){
 			else{
 				$('.err_edit_st').html('')
 				$.ajax({
-					url: '//127.0.0.1:8000/studentsAPI/' + it.next().next().html() + '/',
+					url: '/studentsAPI/' + it.next().next().html() + '/',
 					type: 'PUT',
 					dataType: 'json',
 					data:{
@@ -290,7 +290,7 @@ $(document).ready(function(){
 		else {	
 			$('.erroraddgr').html('')
 			$.ajax({
-				url: '//127.0.0.1:8000/groupsAPI/',
+				url: '/groupsAPI/',
 				type: 'POST',
 				dataType: 'json',
 				data: {
@@ -329,7 +329,7 @@ $(document).ready(function(){
 	$('.delstud').live("click", function(){
 		var it = $(this)
 		$.ajax({
-			url: '//127.0.0.1:8000/studentsAPI/' + $(this).siblings('.idstud').html()  + '/',
+			url: '/studentsAPI/' + $(this).siblings('.idstud').html()  + '/',
 			type: 'DELETE',
 			success: function(){
 				it.parent().remove()
@@ -343,7 +343,7 @@ $(document).ready(function(){
 		redst($(this).next().next().next().html())
 	})
 	$.ajax({
-		url: '//127.0.0.1:8000/groupsAPI/',
+		url: '/groupsAPI/',
 		type: 'GET',
 		dataType: 'json',
 		success: function (data){
@@ -360,34 +360,36 @@ $(document).ready(function(){
 				$('.redgroup:eq(' + i + ')').val(data[i].id)
 				$('.main:eq(' + eq + ')').val(data[i].mainstudent)
 			};
+
+			$.ajax({
+				url: '/studentsAPI/',
+				type: 'GET',
+				dataType: 'json',
+				success: function(data){
+					listgroups = ''
+					for (i = 0; i < $('.delgroup').length; i++){
+						 listgroups += $('.delgroup:eq(' + i + ')').val() + ','
+					}
+					var array = listgroups.split(',')
+					delete array[array.length - 1]
+					// loading list of the students
+					for (x in data){
+						var g = '' + data[x].group
+						$('.br:eq(' + array.indexOf(g) + ')').after('<div class=".divstud"><li \
+							class="sline">' + data[x].name + '; ' + data[x].num + '; ' + data[x].date + '</li> \
+							<button class="inp" style="display: none">' + data[x].group + '</button> \
+							<button class="idstud" style="display: none">' + data[x].id + '</button>')
+					}
+					$('.sline').after('<button class="delstud" \
+					 alt="Delete"></button><button \
+					class="redstud" alt="Redact"></button><br class="brr"></div>')
+
+				},			
+			})
 		}
 	})
 
-	$.ajax({
-		url: '//127.0.0.1:8000/studentsAPI/',
-		type: 'GET',
-		dataType: 'json',
-		success: function(data){
-			listgroups = ''
-			for (i = 0; i < $('.delgroup').length; i++){
-				 listgroups += $('.delgroup:eq(' + i + ')').val() + ','
-			}
-			var array = listgroups.split(',')
-			delete array[array.length - 1]
-			// loading list of the students
-			for (x in data){
-				var g = '' + data[x].group
-				$('.br:eq(' + array.indexOf(g) + ')').after('<div class=".divstud"><li \
-					class="sline">' + data[x].name + '; ' + data[x].num + '; ' + data[x].date + '</li> \
-					<button class="inp" style="display: none">' + data[x].group + '</button> \
-					<button class="idstud" style="display: none">' + data[x].id + '</button>')
-			}
-			$('.sline').after('<button class="delstud" \
-			 alt="Delete"></button><button \
-			class="redstud" alt="Redact"></button><br class="brr"></div>')
 
-		},			
-	})
 	// student adding
 	$('.addingstudent').click(function (){
 		var month = $(this).siblings('#id_date_month').val()
@@ -403,7 +405,7 @@ $(document).ready(function(){
 		else{
 			$('.erroraddst').html('');
 			$.ajax({
-				url: '//127.0.0.1:8000/studentsAPI/',
+				url: '/studentsAPI/',
 				type: 'POST',
 				dataType: 'json',
 				data: {
