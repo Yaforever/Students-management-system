@@ -56,11 +56,15 @@ a{
 }
 
 #id_name{
-	width: 280px;
+	width: 275px;
 }
 
 #id_num{
-	width: 90px;
+	width: 59px;
+}
+
+#id_username, #id_password{
+	width: 160px;
 }
 
 .enter1{
@@ -189,7 +193,7 @@ p{
 
 .all_gr{
 	display: inline-block;
-	margin: 30px;
+	margin-left: 30px;
 }
 
 .delgroup{
