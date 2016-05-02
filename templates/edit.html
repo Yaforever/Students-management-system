@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block user %}{% endblock %}
+
 {% block content %}
+
 {% if user.username %}
 	
-<div class="main">
 	<div class="auth">
 		<li class="out"><a href='/auth/logout/'>logout ({{ user }})</a></li>
 	</div>
@@ -13,7 +15,7 @@
 		{{ gform }}
 		<input type='button' class="addinggroup" value='+'></input><br>
 		<div class="erroraddgr"></div><br>
-		<br>
+	<br>
 
 		<h3 class="st">Add student</h3>
 		<div class="add_st">{{ sform }}
@@ -40,18 +42,13 @@
 		<div class="space"></div>
 	</div>
 
-	
-	
-</div>
-	<script type="text/javascript" src="{% static "js/script.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/script.js" %}"></script>	
 {% else %}
-<form action='/auth/login/' method='post'>
-	<span class="err">{{ err }}</span><br>
-	{% csrf_token %}
-	{{form}}
-	<input type='submit' class="enter1" value='login'></input>
-</form>
+	<form action='/auth/login/' method='post'>
+		<span class="err">{{ err }}</span><br>
+		{% csrf_token %}
+		{{form}}
+		<input type='submit' class="enter1" value='login'></input>
+	</form>
 {% endif %}
 {% endblock %}
-
-
