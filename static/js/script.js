@@ -385,6 +385,7 @@ $(document).ready(function(){
 			else {
 				$('.erroraddst').html('');
 			}
+			console.log(checkname, num, $(this).siblings('#id_group').val(), year + '-' + month + '-' + day)
 			$.ajax({
 				url: '/studentsAPI/',
 				type: 'POST',

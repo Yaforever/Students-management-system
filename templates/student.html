@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+	{% block content %}
+	<div class="groupss">
+	<div class="studtable"><div class="studname">Full name</div><div class="birst">Birstday</div>
+	<div class="number">Num</div><div class="namegroup">Group</div></div>
+	
+	<div class="listofstud">
+		
+		{% for s in student.student_set.all %}
+		    <li><div class="studname">{{ s.name }}</div><div class="birst">{{ s.date }}</div><div class="number">{{ s.num }}</div><div class="namegroup">{{ s.group.groupname }}</div></li>
+		{% endfor %}
+	</div>
+		
+	</div>
+	<a href='/'>back to groups</a>
+	{% endblock %}
+
+

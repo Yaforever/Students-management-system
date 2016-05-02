@@ -47,7 +47,7 @@ def index(request):
 	for i in groups: 
 		c = Student.objects.filter(group_id=i.id).count()
 		listgroups.append(c)
-	return render(request, 'stud/index.html', {'groups': groups, 'user': user,
+	return render(request, 'base.html', {'groups': groups, 'user': user,
 	 'listgroups': listgroups, 'info': info, 'form': form, 'err': err})
 
 
@@ -62,7 +62,7 @@ def students(request, group_id):
 		request.session['err'] = ''
 
 	request.session["ses"] = True
-	return render(request, 'stud/student.html', {'student': student, 
+	return render(request, 'student.html', {'student': student, 
 		'username': username, 'form': form, 'err': err})
 
 
@@ -84,7 +84,7 @@ def edit(request):
 
 	request.session["ses"] = True
 
-	return render(request, 'stud/edit.html', {'groups': groups, 'student': student, 
+	return render(request, 'edit.html', {'groups': groups, 'student': student, 
 		'username': username, 'gform': gform, 'sform': sform, 'redgform': redgform, 
 		'redsform': redsform, 'form': form, 'err': err})
 
