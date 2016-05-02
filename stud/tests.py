@@ -39,3 +39,7 @@ class Group_Student_Test(TestCase):
 		self.assertEqual(r.status_code, 204)      
 
 
+class Auth_Test(TestCase):
+    def test_auth(self):
+        response = self.client.post('/', {'username': 'admin', 'password': '5t5t5t5t'})
+        self.assertEqual(response.status_code, 200) 
