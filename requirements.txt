@@ -21,7 +21,7 @@ dnspython==1.11.1
 duplicity==0.6.23
 gunicorn==19.4.5
 html5lib==0.999
-httpie==0.9.3
+httpie==1.0.3
 httplib2==0.8
 ipython==1.2.1
 lockfile==0.8
