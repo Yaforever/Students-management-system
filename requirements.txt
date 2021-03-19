@@ -16,7 +16,7 @@ decorator==3.4.0
 defer==1.0.6
 dirspec==13.10
 dj-database-url==0.4.0
-djangorestframework==3.3.3
+djangorestframework==3.11.2
 dnspython==1.11.1
 duplicity==0.6.23
 gunicorn==19.4.5
