@@ -1,5 +1,5 @@
 CDDB==1.4
-Django==1.9.4
+Django==2.2.24
 PAM==0.4.2
 Pillow==2.3.0
 Pygments==2.1.3
